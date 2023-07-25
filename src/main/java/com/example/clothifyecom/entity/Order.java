@@ -11,12 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "cust_orders")
+@Table(name = "cust_order")
 
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String orderId;
+    private int orderID;
 
     private OrderStatustype status;
     private String cust_Address;
@@ -26,7 +26,7 @@ public class Order {
     private int custID;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "orderId", referencedColumnName = "orderID")
-    private List<OrderDetail> orderdetails;
+    @JoinColumn(name = "orderID", referencedColumnName = "orderID")
+    private List<OrderDetail> orderDetails;
 
 }
