@@ -1,4 +1,4 @@
-package com.example.clothifyecom.controller;
+package com.example.clothifyecom.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,20 +8,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Customer {
-
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int custID;
-
-    private String fName;
-    private String lName;
-    private String address;
-    private String mobile;
+    private int userID;
+    //@column(unique = true,nullable = false)
+    private String username;
+    private String password;
+    //@Column(nullable = false)
+    private String role;
+    //@Column(unique = true,nullable = false)
+    private String email;
 
 
 }
