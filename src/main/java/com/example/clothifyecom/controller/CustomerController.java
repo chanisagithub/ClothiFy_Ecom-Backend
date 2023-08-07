@@ -1,5 +1,6 @@
 package com.example.clothifyecom.controller;
 
+import com.example.clothifyecom.dto.CrudResponses;
 import com.example.clothifyecom.entity.Customer;
 import com.example.clothifyecom.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,11 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers(){
         return ResponseEntity.ok(customerRepo.findAll());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CrudResponses> updateCustomer(@PathVariable ("id")int custID,@RequestBody Customer customer){
+        customerRepo.save(customer);
+        return ResponseEntity.ok(new CrudResponses(true,"Customer Updated"));
     }
 }
