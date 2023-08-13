@@ -18,6 +18,4 @@ public class ItemRequestDTO {
     private ItemCategory category;
     private MultipartFile imgURL;
 
-
-
 }

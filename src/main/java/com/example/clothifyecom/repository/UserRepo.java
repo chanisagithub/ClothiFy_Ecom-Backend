@@ -7,5 +7,6 @@ public interface UserRepo extends JpaRepository<User,Integer> {
     int countByUsername(String username);
     int countByEmail(String email);
 
-    User findByUserId(int serID);
+    User findByUserID(int userID);
+
 }
