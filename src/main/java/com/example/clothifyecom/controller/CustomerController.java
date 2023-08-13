@@ -24,15 +24,17 @@ public class CustomerController {
     public ResponseEntity<CrudResponses> addCustomer(@RequestBody Customer customer){
         if (userRepo.countByUsername(customer.getUser().getUsername())==0 && userRepo.countByEmail(customer.getUser().getEmail())==0){
             customerRepo.save(customer);
-
             return ResponseEntity.ok(new CrudResponses(true,"Customer Added"));
         }
         return ResponseEntity.badRequest().body(new CrudResponses(false,"Duplicate User"));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getCustomer(@PathVariable (value = "id")int custID){
-        return ResponseEntity.ok(customerRepo.findByCustID(custID));
+    public ResponseEntity<?> getCustomer(@PathVariable ("id")int custID){
+        if (customerRepo.existsById(custID)){
+            return ResponseEntity.ok(customerRepo.findByCustID(custID));
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Customer not found"));
     }
 
     @GetMapping
@@ -44,5 +46,13 @@ public class CustomerController {
     public ResponseEntity<CrudResponses> updateCustomer(@PathVariable ("id")int custID,@RequestBody Customer customer){
         customerRepo.save(customer);
         return ResponseEntity.ok(new CrudResponses(true,"Customer Updated"));
+    }
+
+    public ResponseEntity<CrudResponses> deleteCustomer(@PathVariable ("id")int custID){
+        if (customerRepo.existsById(custID)){
+            customerRepo.deleteById(custID);
+            return ResponseEntity.ok(new CrudResponses(true,"Customer Deleted"));
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Customer not found"));
     }
 }
