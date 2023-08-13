@@ -2,6 +2,7 @@ package com.example.clothifyecom.controller;
 
 import com.example.clothifyecom.dto.CrudResponses;
 import com.example.clothifyecom.entity.Customer;
+import com.example.clothifyecom.enums.UserRole;
 import com.example.clothifyecom.repository.CustomerRepo;
 import com.example.clothifyecom.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 @RestController
 @RequestMapping("/customer")
@@ -22,10 +24,12 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CrudResponses> addCustomer(@RequestBody Customer customer){
-        if (userRepo.countByUsername(customer.getUser().getUsername())==0 && userRepo.countByEmail(customer.getUser().getEmail())==0){
-            customerRepo.save(customer);
-            return ResponseEntity.ok(new CrudResponses(true,"Customer Added"));
+        if (userRepo.existsByEmail(customer.getUser().getEmail())){
+
+            return ResponseEntity.badRequest().body(new CrudResponses(false,"Duplicate Data"));
         }
+        customer.getUser().setRole(UserRole.CUSTOMER_ROLE);
+        customerRepo.save(customer);
         return ResponseEntity.badRequest().body(new CrudResponses(false,"Duplicate User"));
     }
 
