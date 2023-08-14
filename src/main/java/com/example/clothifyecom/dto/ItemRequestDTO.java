@@ -16,6 +16,6 @@ public class ItemRequestDTO {
     private int Mqty;
     private int Sqty;
     private ItemCategory category;
-    private MultipartFile imgURL;
+    private MultipartFile Img;
 
 }
