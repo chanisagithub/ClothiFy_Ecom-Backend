@@ -30,7 +30,7 @@ public class CustomerController {
         }
         customer.getUser().setRole(UserRole.CUSTOMER_ROLE);
         customerRepo.save(customer);
-        return ResponseEntity.badRequest().body(new CrudResponses(false,"Duplicate User"));
+        return ResponseEntity.badRequest().body(new CrudResponses(true,"User Added"));
     }
 
     @GetMapping("{id}")
@@ -51,7 +51,7 @@ public class CustomerController {
         customerRepo.save(customer);
         return ResponseEntity.ok(new CrudResponses(true,"Customer Updated"));
     }
-
+    @DeleteMapping("/{id}")
     public ResponseEntity<CrudResponses> deleteCustomer(@PathVariable ("id")int custID){
         if (customerRepo.existsById(custID)){
             customerRepo.deleteById(custID);
