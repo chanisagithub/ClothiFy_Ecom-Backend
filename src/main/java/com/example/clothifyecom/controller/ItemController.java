@@ -1,6 +1,5 @@
 package com.example.clothifyecom.controller;
 
-
 import com.example.clothifyecom.dto.CrudResponses;
 import com.example.clothifyecom.dto.ItemRequestDTO;
 import com.example.clothifyecom.entity.Item;
@@ -8,6 +7,7 @@ import com.example.clothifyecom.repository.ItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ServletResponseMethodArgumentResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +29,14 @@ public class ItemController {
                         request.getSqty(), request.getImg().getOriginalFilename(), request.getCategory()));
 
         return ResponseEntity.ok(new CrudResponses(true,"Item Added"));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id")int itemID){
+        if (itemrepo.findById(itemID).isPresent()){
+            return ResponseEntity.ok(itemrepo.findById(itemID).get());
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Item Not Found"));
     }
 
 
