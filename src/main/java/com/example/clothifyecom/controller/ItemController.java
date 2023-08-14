@@ -7,16 +7,16 @@ import com.example.clothifyecom.repository.ItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ServletResponseMethodArgumentResolver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/item")
 public class ItemController {
 
-    private final String ITEM_IMAGE_PATH = "/Users/chanisa/Documents/ICET/clothify_store/item_images/";
+    private final String ITEM_IMAGE_PATH = "//Users//chanisa/Documents//ICET/clothify_store//item_images//";
 
     @Autowired
     private ItemRepo itemrepo;
@@ -39,5 +39,22 @@ public class ItemController {
         return ResponseEntity.badRequest().body(new CrudResponses(false,"Item Not Found"));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Item>> getAllItems(){return ResponseEntity.ok(itemrepo.findAll());}
+
+
+    public ResponseEntity<CrudResponses> updateItem(@PathVariable("id")int itemID,
+                                                    @ModelAttribute ItemRequestDTO request) throws IOException {
+        if (itemrepo.findById(itemID).isPresent()){
+            new File(ITEM_IMAGE_PATH + itemrepo.findById(itemID).get().getImgURL()).delete();
+            request.getImg().transferTo(new File(ITEM_IMAGE_PATH + request.getImg().getOriginalFilename()));
+
+            itemrepo.save(new Item(itemID,request.getName(),request.getPrice(),request.getMqty(),request.getLqty(),
+                                request.getSqty(), request.getImg().getOriginalFilename(), request.getCategory()));
+
+            return ResponseEntity.ok(new CrudResponses(true,"Item Details Updated"));
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Item Not Found"));
+    }
 
 }
