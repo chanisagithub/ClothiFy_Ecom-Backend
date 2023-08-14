@@ -42,7 +42,7 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<List<Item>> getAllItems(){return ResponseEntity.ok(itemrepo.findAll());}
 
-
+    @PutMapping
     public ResponseEntity<CrudResponses> updateItem(@PathVariable("id")int itemID,
                                                     @ModelAttribute ItemRequestDTO request) throws IOException {
         if (itemrepo.findById(itemID).isPresent()){
@@ -55,6 +55,15 @@ public class ItemController {
             return ResponseEntity.ok(new CrudResponses(true,"Item Details Updated"));
         }
         return ResponseEntity.badRequest().body(new CrudResponses(false,"Item Not Found"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CrudResponses> deleteItems(@PathVariable("id")int itemID){
+        if (itemrepo.existsById(itemID)){
+            itemrepo.deleteById(itemID);
+            return ResponseEntity.ok(new CrudResponses(true,"Item Deleted"));
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Item not found"));
     }
 
 }
