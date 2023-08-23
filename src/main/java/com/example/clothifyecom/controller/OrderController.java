@@ -10,10 +10,7 @@ import com.example.clothifyecom.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
@@ -64,5 +61,26 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<List<Order>> getOrderOfCus(@PathVariable("id")int customerID){
+        return ResponseEntity.ok(orderRepo.findByCustID(customerID));
+    }
+
+    @PutMapping("/{id}/{status}")
+    public ResponseEntity<CrudResponses> updateOrderStatus(@PathVariable("id")int orderID,@PathVariable("status")int status){
+        if (orderRepo.findById(orderID).isPresent()){
+            Order order= orderRepo.findById(orderID).get();
+            switch (status){
+                case 0: order.setStatus(OrderStatustype.PENDING); break;
+                case 1: order.setStatus(OrderStatustype.PROCESSING); break;
+                case 2: order.setStatus(OrderStatustype.DELIVERED); break;
+                case 3: order.setStatus(OrderStatustype.CANCELLED); break;
+                default:return ResponseEntity.badRequest().body(new CrudResponses(false,"Invalid Status"));
+            }
+            orderRepo.save(order);
+            return ResponseEntity.ok(new CrudResponses(true,"Order Updated"));
+        }
+        return ResponseEntity.badRequest().body(new CrudResponses(false,"Order Not Found"));
+    }
 
 }
